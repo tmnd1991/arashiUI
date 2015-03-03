@@ -1,0 +1,12 @@
+#jstree_demo{
+  color : white;
+  font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+  font-weight: bold;
+  height: 100%;
+  padding-bottom: 15px;
+}
+#jstree_container{
+  overflow: hidden;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}

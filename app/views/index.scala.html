@@ -1,0 +1,132 @@
+
+<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Arashi | Monitor Panel</title>
+            <!-- foundation stylesheet -->
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/foundation.css")" />
+            <!-- jstree stylesheet -->
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/default/style.css")" />
+            <!-- my stylesheet -->
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/index.css")" />
+            <!-- jquery ui css -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.css"/>
+            <!-- datepicker css -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.4.5/jquery-ui-timepicker-addon.css"/>
+
+            <!-- modernizr js lib -->
+        <script src="@routes.Assets.at("javascripts/vendor/modernizr.js")" ></script>
+    </head>
+    <body>
+        <div class="sticky">
+            <div class="off-canvas-wrap" data-offcanvas>
+                <div class="inner-wrap">
+                    <nav class="tab-bar">
+                        <section class="left-small">
+                            <a class="left-off-canvas-toggle menu-icon" href="#"><span></span></a><span id="step-one"></span>
+                        </section>
+
+                        <section class="middle tab-bar-section">
+                            <h1 class="title" style="height: 100%">
+                                <img src="@routes.Assets.at("images/logo_inv.png")" style="padding: 5px; height: 100%"/>
+                                Arashi Monitor Panel
+                            </h1>
+
+                        </section>
+                        <section class="right-small">
+                            <a class="right-off-canvas-toggle" href="#"><span>
+                                <img class="button" src="@routes.Assets.at("images/cal.png")" style="height: 100%; padding: 5px"/>
+                            </span></a><span id="step-two"></span>
+                        </section>
+                    </nav>
+                    <aside class="left-off-canvas-menu">
+                        <div class="has-form">
+                            <div class="row collapse">
+                                <input type="text" id="searchText" placeholder="Find Resources">
+                            </div>
+                        </div>
+                        <div id="jstree_container">
+                            <div id="jstree_demo"></div>
+                        </div>
+                        <div class="row"></div>
+                    </aside>
+                    <aside class="right-off-canvas-menu">
+                        <div class="row off-canvas-wrap" style="margin: 10px; color: #f5f5f5">
+                            <div class="small-12 columns">
+                                <input type="text" class="datetimepick" placeholder="From">
+                                <input type="text" class="datetimepick" placeholder="To">
+                                <div class="row">
+                                    <div class="small-centered columns">
+                                        <div class="switch">
+                                            <input id="realtimeSwitch" type="checkbox">
+                                            <label for="realtimeSwitch"></label>
+                                        </div>
+                                        Realtime Updates
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                    <section class="main-section" id="MAIN" style="min-height: 700px">
+                    </section>
+                    <a class="exit-off-canvas"></a>
+                </div>
+            </div>
+        </div>
+        <script src="@routes.Assets.at("javascripts/vendor/jquery.js")" ></script>
+        <script src="@routes.Assets.at("javascripts/vendor/jquery.cookie.js")" ></script>
+        <script src="@routes.Assets.at("javascripts/jquery.flot.js")" ></script>
+        <script src="@routes.Assets.at("javascripts/foundation.min.js")" ></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.4.5/jquery-ui-timepicker-addon.js"></script>
+        <script src="@routes.Assets.at("javascripts/jstree.min.js")" ></script>
+        <script src="@routes.Assets.at("javascripts/jsSet.js")" ></script>
+        <script src="@routes.Assets.at("javascripts/urlUtils.js")" ></script>
+        <script src="@routes.Assets.at("javascripts/index.js")" ></script>
+        <div id="throbber" class="reveal-modal" data-reveal>
+            <span>Loading...</span>
+            <a class="close-reveal-modal">&#215;</a>
+        </div>
+
+
+        <div class="row panel " id="template_graph" style="display: none;">
+            <div class="small-12 columns contentArea">
+                <div class="row">
+                    <div class="small-3 columns">
+                        <span class="titleSpan"></span>
+                    </div>
+                    <div class="small-9 columns">
+                        <div class="placeholder"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row panel" id="template_singleValue" style="display: none;">
+            <div class="small-12 columns contentArea">
+                <div class="row">
+                    <div class="small-12 columns">
+                        <span class="titleSpan"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-12 columns">
+                        <span class="label"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <!-- Tour -->
+        <ol class="joyride-list" data-joyride>
+            <li data-id="step-one" data-text="Next" data-options="tip_location: bottom; nub_position: left, top; tip_container: 'body'; prev_button: false" data-button="Next >>">
+                <h4>Resources</h4>
+                <p>Here you can select the Resources you want to monitor.</p>
+            </li>
+            <li data-id="step-two" data-text="Next" data-options="tip_location: left; nub_position: right; tip_container: 'body'; next_button: false" data-button="<< Prev">
+                <h4>Time Lapse</h4>
+                <p>And here you can set the time lapse you want to monitor.</p>
+            </li>
+        </ol>
+    </body>
+</html>
