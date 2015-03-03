@@ -35,7 +35,6 @@ function removeNode(tree, obj, node) {
 	}
 }
 function min(x){
-    console.log(x);
     var min = null
     for (k in x) {
         if (min === null)
@@ -57,7 +56,6 @@ $(function() {
 	//getting the panel template
     $(".placeholder").each(function () {
         var value = min([window.innerWidth, 840]);
-        console.log(value);
         value=0.6*value;
         $(this).css("width",value);
         $(this).css("height",value);
