@@ -10,5 +10,7 @@ libraryDependencies ++= Seq(
   jdbc,
   anorm,
   cache,
-  ws
+  ws,
+  "org.w3" % "jena_2.11" % "0.7.1",
+  "it.unibo.ing" %% "utils" % "1.0" withSources() intransitive()
 )
