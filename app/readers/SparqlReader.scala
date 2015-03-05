@@ -22,13 +22,11 @@ trait SparqlReader extends SparqlReaderDependencies{ self =>
   import sparqlHttp.sparqlEngineSyntax._
   val endpoint : URL
   val graph : String
-  lazy val result = query()
   import DateUtils._
   def query(): Iterable[Resource] = {
       val arashi = ArashiPrefix[Rdf]
       val Objects = new Objects
       import Objects._
-
       val query = parseSelect(s"""
                                 SELECT DISTINCT ?s ?p ?o
                                 {  GRAPH $graph { ?s ?p ?o } }""").get

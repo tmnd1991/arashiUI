@@ -140,15 +140,16 @@ $(function() {
         function(){
             var _this = $(this)
             if (_this.hasClass("from")){
-                _this.datepicker("setDate", new Date());
+                var d = new Date();
+                d.setTime(d.getTime()-24*60*60*1000);
+                console.log(d);
+                _this.datepicker("setDate", d);
             }
             else{
                 _this.datepicker("setTime", new Date());
             }
         }
     );
-    //$(".placeholder").css("width","500px").css("height","500px")
-
 });
 /**
 *** Gets data from the resourceId
@@ -204,6 +205,9 @@ function updatePanels(){
     console.log("updates");
 }
 function getData(){
+    return {
+        'url': "/resources"
+    }/*
 	return [{
 				"id": "ajson1",
 				"parent": "#",
@@ -316,5 +320,5 @@ function getData(){
 				"id": "ajson28",
 				"parent": "ajson2",
 				"text": "Child 2"
-			}];
+			}];*/
 }
