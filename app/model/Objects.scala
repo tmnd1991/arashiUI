@@ -5,15 +5,13 @@ package model
  */
 
 
+import java.net.URL
+
 import model.Ontology.ArashiPrefix
 import org.w3.banana._
-import org.w3.banana.diesel._
 import org.w3.banana.binder._
 import scala.util._
-import java.security.interfaces.RSAPublicKey
-import java.security.KeyFactory
-import java.security.spec.RSAPublicKeySpec
-import java.math.BigInteger
+
 
 class Objects[Rdf <: RDF](implicit
                           ops: RDFOps[Rdf],
@@ -21,6 +19,7 @@ class Objects[Rdf <: RDF](implicit
   val arashi = ArashiPrefix[Rdf]
   import ops._
   import recordBinder._
+
   object ResourceBind{
     val clazz = URI("http://arashi/Resource")
     implicit val classUris = classUrisFor[Resource](clazz)

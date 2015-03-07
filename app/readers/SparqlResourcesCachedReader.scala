@@ -10,7 +10,7 @@ import scala.concurrent.duration.Duration
 /**
  * Created by Andrea on 05/03/15.
  */
-trait SparqlCachedReader extends SparqlReader{
+trait SparqlResourcesCachedReader extends SparqlResourcesReader{
   val validityTime : Duration
   private var _r : Iterable[Resource] = null
   private var _lastUpd : Date = new Date(0)

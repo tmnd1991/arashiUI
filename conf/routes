@@ -3,8 +3,9 @@
 # ~~~~
 
 # Home page
-GET        /                    controllers.Application.index
-GET     /resources               controllers.Resources.allResources
+GET        /                     controllers.Application.index
+GET        /resources/           controllers.Resources.root()
+GET        /resources/:id        controllers.Resources.childrenOf(id : String)
 
 # Map static resources from the /public folder to the /assets URL path
-GET        /assets/*file        controllers.Assets.at(path="/public", file)
+GET        /assets/*file         controllers.Assets.at(path="/public", file)

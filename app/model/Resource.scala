@@ -1,12 +1,21 @@
 package model
 
+import java.net.URL
 
 
 /**
  * Created by Antonio on 04/03/2015.
  */
 
-case class Resource(id : String, unit : Option[String], sampleType : String, name : Option[String] = None)
+case class Resource(id : String, unit : Option[String], sampleType : String, name : Option[String] = None){
+  def urlId = new URL(id)
+  override def equals(any: Any) : Boolean = {
+    if(any.isInstanceOf[Resource])
+      any.asInstanceOf[Resource].id == this.id
+    else
+      false
+  }
+}
 object Resource {
 
   import play.api.libs.json._

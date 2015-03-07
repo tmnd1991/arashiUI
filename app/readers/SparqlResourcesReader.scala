@@ -16,7 +16,7 @@ import scala.concurrent.duration.Duration
  * Created by Antonio on 04/03/2015.
  */
 
-trait SparqlReader extends SparqlReaderDependencies{ self =>
+trait SparqlResourcesReader extends SparqlReaderDependencies{ self =>
   import ops._
   import sparqlOps._
   import sparqlHttp.sparqlEngineSyntax._
@@ -52,6 +52,6 @@ trait SparqlReader extends SparqlReaderDependencies{ self =>
             case _ => None
           })
       }
-     rs
+      rs
   }
 }

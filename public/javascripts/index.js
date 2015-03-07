@@ -10,16 +10,23 @@ function getPanelId(el) {
 *** Adds only the leaf nodes to the set
 **/
 function addNode(tree, obj, node) {
-	if (node.children.length !== 0) {
-		node.children.forEach(function(x) {
-			var n = tree.jstree(true).get_node(x);
-			if (n !== undefined)
-				addNode(tree, obj, n);
-		});
-	}
-	else{
-		obj.addElement(node.id);
-	}
+    if (!node.state.loaded){
+        tree.jstree(true).load_node(node.id, function(n){
+           addNode(tree, obj, n);
+        });
+    }
+    else{
+        if (node.children.length !== 0) {
+            node.children.forEach(function(x) {
+                var n = tree.jstree(true).get_node(x);
+                if (n !== undefined)
+                    addNode(tree, obj, n);
+            });
+        }
+        else{
+            obj.addElement(node.id);
+        }
+    }
 }
 /**
 *** Removes all the leaf nodes from the set
@@ -74,7 +81,13 @@ $(function() {
 			"themes": {
 				"stripes": true
 			},
-			'data': getData()
+            'data' : {
+                'url' : function (node) {
+                    return node.id === '#' ?
+                        '/resources/' :
+                        '/resources/'+node.id;
+                }
+            }
 		},
 		"types": {
 			"#": {
@@ -142,7 +155,6 @@ $(function() {
             if (_this.hasClass("from")){
                 var d = new Date();
                 d.setTime(d.getTime()-24*60*60*1000);
-                console.log(d);
                 _this.datepicker("setDate", d);
             }
             else{
@@ -183,6 +195,7 @@ function dataOfMeter(el){
 *** Creates a new html panel about the passed resource
 **/
 function newPanelForResource(el) {
+    var n = tree.jstree(true).get_node(el);
 	var r = Math.floor((Math.random() * 2)); //between 0 and 1
 	var panelId = getPanelId(el);
 	var toRet = null;
@@ -195,7 +208,7 @@ function newPanelForResource(el) {
 		toRet = template_singleValue.clone().attr('id', panelId);
 		toRet.find(".label").text("template text");
 	}
-	toRet.find(".titleSpan").html(el);
+	toRet.find(".titleSpan").html(n.original.parentText + n.original.text);
 	return toRet;
 }
 /**
