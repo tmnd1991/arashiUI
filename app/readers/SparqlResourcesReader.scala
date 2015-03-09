@@ -1,13 +1,17 @@
 package readers
 
-import java.util.Date
+import java.net.URL
+import scala.concurrent.duration._
+
+import it.unibo.ing.utils._
+import it.unibo.ing.utils.DateUtils._
 
 import model.{Resource, Objects}
 import model.Ontology.ArashiPrefix
-import org.w3.banana._, syntax._, diesel._
-import java.net.URL
-import java.util.concurrent.TimeUnit
-import it.unibo.ing.utils._
+import org.w3.banana._
+import org.w3.banana.diesel._
+import org.w3.banana.io._
+import scala.util.Try
 
 import scala.collection.immutable.Iterable
 import scala.concurrent.duration.Duration
@@ -20,17 +24,23 @@ trait SparqlResourcesReader extends SparqlReaderDependencies{ self =>
   import ops._
   import sparqlOps._
   import sparqlHttp.sparqlEngineSyntax._
+
   val endpoint : URL
   val graph : String
-  import DateUtils._
+
+
   def query(): Iterable[Resource] = {
       val arashi = ArashiPrefix[Rdf]
       val Objects = new Objects
       import Objects._
-      val query = parseSelect(s"""
-                                SELECT DISTINCT ?s ?p ?o
-                                {  GRAPH $graph { ?s ?p ?o } }""").get
-      val answers: Rdf#Solutions = endpoint.executeSelect(query).getOrFail(Duration(30, TimeUnit.SECONDS))
+
+      val query = parseConstruct(s"""
+                                CONSTRUCT { ?s ?p ?o }
+                                WHERE {  GRAPH $graph { ?s ?p ?o } }""").get
+      val answers: Rdf#Graph = endpoint.executeConstruct(query).getOrFail(30 seconds)
+      List(answers.toPointedGraph.as[Resource])
+      //List(answers.graph.toPG.as[Resource])
+    /*
       val it = answers.iterator map { (row: Rdf#Solution) =>
         (
           row("s").get.as[Rdf#URI].get,
@@ -53,5 +63,6 @@ trait SparqlResourcesReader extends SparqlReaderDependencies{ self =>
           })
       }
       rs
+    */
   }
 }

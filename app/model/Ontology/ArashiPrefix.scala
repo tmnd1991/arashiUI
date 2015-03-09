@@ -9,7 +9,7 @@ object ArashiPrefix {
   def apply[Rdf <: RDF](implicit ops: RDFOps[Rdf]) = new ArashiPrefix[Rdf](ops)
 }
 
-class ArashiPrefix[Rdf <: RDF](ops: RDFOps[Rdf]) extends PrefixBuilder("xsd", "http://ing.unibo.it/smacs/predicates#")(ops) {
+class ArashiPrefix[Rdf <: RDF](ops: RDFOps[Rdf]) extends PrefixBuilder("smacs", "http://ing.unibo.it/smacs/predicates#")(ops) {
   import ops._
   val name                   = apply("name")
   val memoryUsage            = apply("hasMemoryUsage")
