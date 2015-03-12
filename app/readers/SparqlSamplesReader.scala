@@ -1,20 +1,74 @@
 package readers
 
 import java.util.Date
+import java.net.URL
+import org.joda.time.DateTime
+
+import scala.concurrent.duration._
+import org.w3.banana._, io._, binder._, jena._, diesel._
+
+import it.unibo.ing.utils.DateUtils
+import model.Ontology.ArashiPrefix
+import model.{Objects, Sample}
 
 /**
- * Created by tmnd91 on 10/03/15.
+ * @author Antonio Murgia
+ * @version 10/03/15
  */
-trait SparqlSamplesReader {
+trait SparqlSamplesReader extends SparqlReaderDependencies{
+  self =>
+  import ops._
+  import sparqlOps._
+  import sparqlHttp.sparqlEngineSyntax._
 
+  val endpoint : URL
 
-  val begin = """"2015-03-03T05:22:29Z"^^xsd:dateTime"""
-  val end   = """"2015-03-03T05:44:02Z"^^xsd:dateTime"""
-  val query = s"""
-    PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#>
-    SELECT ?g ?dateTime WHERE{
-      GRAPH ?g {} .
-      BIND( xsd:dateTime(strafter(str(?g),"http://stormsmacs/tests/")) as ?dateTime )
-      FILTER( $begin <= ?dateTime && ?dateTime <= $end)
-  }"""
+  def query(resource : URL, begin : Date, end : Date) : List[Sample] = {
+    val arashi = ArashiPrefix[Rdf]
+    val Objects = new Objects
+    import Objects._
+    import Objects.SampleBind._
+    val beginString = DateUtils.format(begin)
+    val endString   = DateUtils.format(end)
+    val resString   = resource.toString()
+    val sString = s"""
+      PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#>
+      PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+      PREFIX smacs: <http://ing.unibo.it/smacs/predicates#>
+      CONSTRUCT {
+        ?g rdf:value ?o .
+        ?g xsd:dateTime ?dateTime .
+        ?g rdf:type smacs:sampleType
+      }
+      WHERE{
+        VALUES ?x {<$resString>} .
+        GRAPH ?g { ?x rdf:value ?o} .
+        BIND( xsd:dateTime(strafter(str(?g),"http://stormsmacs/tests/")) as ?dateTime ) .
+        FILTER( "$beginString"^^xsd:dateTime <= ?dateTime &&
+                "$endString"^^xsd:dateTime >= ?dateTime )
+      }"""
+      //LIMIT 100"""
+    println(sString)
+    val query = parseConstruct(sString).getOrElse(throw new Exception("cannot parse sparql query"))
+
+    val resultGraph = endpoint.executeConstruct(query).getOrFail(30 seconds)
+    println(resultGraph.triples.size)
+    val samples = resultGraph.triples.collect {
+      case Triple(sample, rdf.typ, arashi.sampleType) =>{
+        println(sample)
+        val pg = PointedGraph(sample, resultGraph)
+        println(pg.as[Sample].get)
+        pg.as[Sample].toOption
+      }
+      case k : Any => {println(k); None}
+    }.flatten
+    samples.toList.sortBy(_.date)
+  }
+
+  implicit class RichDateTime(x : DateTime) extends Ordered[DateTime]{
+    override def compare(that: DateTime): Int = {
+      x.getMillis.compareTo(that.getMillis)
+    }
+  }
+
 }

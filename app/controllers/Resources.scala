@@ -7,7 +7,7 @@ import org.w3.banana.jena.io.JenaRDFWriter
 import play.api._
 import play.api.mvc._
 import play.api.libs.json.Json
-import readers.SparqlJenaReader
+import readers.{SparqlResourceJenaReader}
 import java.net.URL
 
 import scala.collection._
@@ -17,7 +17,7 @@ import scala.collection._
  */
 object Resources extends Controller{
 
-  lazy val reader = new SparqlJenaReader(new URL("http://137.204.57.150:3030/ds/query"), "<http://stormsmacs/tests/Resources>")
+  lazy val reader = new SparqlResourceJenaReader(new URL("http://137.204.57.150:3030/ds/query"), "<http://stormsmacs/tests/Resources>")
   private var lastResult : Iterable[Resource] = null
   private var nodeSet : Set[ResourceTreeNode] = null
   def childrenOf(parentId : String) = Action{

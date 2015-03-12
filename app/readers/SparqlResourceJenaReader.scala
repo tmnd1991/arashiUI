@@ -10,6 +10,6 @@ import scala.concurrent.duration._
 /**
  * Created by Antonio on 04/03/2015.
  */
-class SparqlJenaReader(val endpoint : URL,
+class SparqlResourceJenaReader(val endpoint : URL,
                        val graph : String,
                        val validityTime : Duration = 1 minutes) extends SparqlResourcesCachedReader with JenaModule

@@ -30,6 +30,8 @@ trait SparqlResourcesReader extends SparqlReaderDependencies{ self =>
 
 
   def query(): Iterable[Resource] = {
+    return Iterable[Resource]()
+    /*
       val arashi = ArashiPrefix[Rdf]
       val Objects = new Objects
       import Objects._
@@ -40,7 +42,6 @@ trait SparqlResourcesReader extends SparqlReaderDependencies{ self =>
       val answers: Rdf#Graph = endpoint.executeConstruct(query).getOrFail(30 seconds)
       List(answers.toPointedGraph.as[Resource])
       //List(answers.graph.toPG.as[Resource])
-    /*
       val it = answers.iterator map { (row: Rdf#Solution) =>
         (
           row("s").get.as[Rdf#URI].get,
