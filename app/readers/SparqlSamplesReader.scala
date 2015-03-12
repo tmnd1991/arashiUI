@@ -48,19 +48,13 @@ trait SparqlSamplesReader extends SparqlReaderDependencies{
                 "$endString"^^xsd:dateTime >= ?dateTime )
       }"""
       //LIMIT 100"""
-    println(sString)
-    val query = parseConstruct(sString).getOrElse(throw new Exception("cannot parse sparql query"))
 
+    val query = parseConstruct(sString).getOrElse(throw new Exception("cannot parse sparql query"))
     val resultGraph = endpoint.executeConstruct(query).getOrFail(30 seconds)
-    println(resultGraph.triples.size)
     val samples = resultGraph.triples.collect {
-      case Triple(sample, rdf.typ, arashi.sampleType) =>{
-        println(sample)
+      case Triple(sample, rdf.typ, arashi.sampleType) =>
         val pg = PointedGraph(sample, resultGraph)
-        println(pg.as[Sample].get)
         pg.as[Sample].toOption
-      }
-      case k : Any => {println(k); None}
     }.flatten
     samples.toList.sortBy(_.date)
   }
