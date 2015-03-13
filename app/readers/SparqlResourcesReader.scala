@@ -53,7 +53,6 @@ trait SparqlResourcesReader extends SparqlReaderDependencies{ self =>
     resultGraph.triples.collect{
       case Triple(resource, rdf.typ, arashi.Resource) =>{
         val pg = PointedGraph(resource, resultGraph)
-        println(pg.as[Resource])
         pg.as[Resource].toOption
       }
     }.flatten
