@@ -38,24 +38,25 @@ trait SparqlResourcesReader extends SparqlReaderDependencies{ self =>
                      PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                      PREFIX smacs: <http://ing.unibo.it/smacs/predicates#>
                      CONSTRUCT {
-                        ?s smacs:unit ?o .
-                        ?s smacs:sampleType ?o .
+                        ?s smacs:unit ?unit .
+                        ?s smacs:sampleType ?sampleType .
                         ?s smacs:id     ?s .
                         ?s rdf:type smacs:Resource
                      }
                      WHERE{
-                        GRAPH $graph { ?s ?p ?o } .
-                        OPTIONAL { ?s smacs:unit ?o }
+                        GRAPH $graph { ?s smacs:sampleType ?sampleType .
+                                       ?s smacs:unit ?unit } .
+                        OPTIONAL { ?s smacs:unit ?unit }
                      }"""
     val query = parseConstruct(sQuery).getOrElse(throw new Exception("cannot parse sparql query"))
     val resultGraph = endpoint.executeConstruct(query).getOrFail(30 seconds)
-    val x: Iterable[Resource] = resultGraph.triples.collect{
+    resultGraph.triples.collect{
       case Triple(resource, rdf.typ, arashi.Resource) =>{
         val pg = PointedGraph(resource, resultGraph)
+        println(pg.as[Resource])
         pg.as[Resource].toOption
       }
     }.flatten
-    x
     //List(Resource("http://10.0.10.15:9875/memory/freePercentage",Some("%"),"gauge"))
   }
 }

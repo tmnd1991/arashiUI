@@ -255,7 +255,10 @@ function updatePanels(){
 function updateGraphPanel(p){
     var id = p.attr("id").split("_")[0];
     dataOfMeter(id , getBeginDate(), getEndDate(), function(d){
-        $.plot(p.find(".placeholder"), [d]);
+        if (d.length != 0)
+            $.plot(p.find(".placeholder"), [d]);
+        else
+            p.find(".placeholder").html("No samples");
     });
 }
 

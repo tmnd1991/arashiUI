@@ -15,7 +15,6 @@ object Samples extends Controller{
   val reader = new SparqlSampleJenaReader(new URL("http://137.204.57.150:3030/ds/query"))
 
   def samplesOf(id : String, from : Long, to : Long) = Action{
-    println(id)
     val samples = reader.query(new URL(id),new Date(from),new Date(to))
     Ok(Json.toJson(samples))
   }

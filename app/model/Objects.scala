@@ -32,6 +32,7 @@ class Objects[Rdf <: RDF](implicit
       def fromPG(pointed: PointedGraph[Rdf]): Try[java.net.URI] = Try(new java.net.URI(pointed.pointer.toString))
       def toPG(uri: java.net.URI): PointedGraph[Rdf] = PointedGraph.apply(makeUri(uri.toString))
     }
+
     val clazz = arashi("Resource")
     implicit val classUris = classUrisFor[Resource](clazz)
     val id = property[java.net.URI](arashi.id)
