@@ -56,6 +56,6 @@ trait SparqlResourcesReader extends SparqlReaderDependencies{ self =>
       }
     }.flatten
     x
-    List(Resource("http://10.0.10.15:9875/memory/freePercentage",Some("%"),"gauge"))
+    //List(Resource("http://10.0.10.15:9875/memory/freePercentage",Some("%"),"gauge"))
   }
 }

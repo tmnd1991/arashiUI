@@ -2,13 +2,12 @@ package model
 
 import java.net.{URI, URL}
 
-
 /**
  * Created by Antonio on 04/03/2015.
  */
 
-case class Resource(id : String, unit : Option[String], sampleType : String){
-  def urlId = new URL(id)
+case class Resource(id : URI, unit : Option[String], sampleType : String){
+  def urlId = new URL(id.toString)
   override def equals(any: Any) : Boolean = {
     if(any.isInstanceOf[Resource])
       any.asInstanceOf[Resource].id == this.id
