@@ -81,6 +81,7 @@ class ArashiPrefix[Rdf <: RDF](ops: RDFOps[Rdf]) extends PrefixBuilder("smacs", 
   val messageId              = apply("messageId")
   val id                     = apply("id")
   val resourceType           = apply("resource")
+  val Resource               = apply("Resource")
   def newProperty(s : String) = apply(s)
   // http://www.w3.org/TR/owl-rdf-based-semantics
   // Table 3.3 Datatypes of the OWL 2 RDF-Based Semantics

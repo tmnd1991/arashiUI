@@ -27,8 +27,8 @@ object Resources extends Controller{
       val converted = reader.result.map(x => ResourceTreeNode.convert(x,true))
       for (r <- converted)
         nodeSet ++= ResourceTreeNode.convertFamily(r,true)
-      val filtered = nodeSet.filter(_.parentId == parentId.toInt)
-      Ok(Json.toJson(filtered))
+      //val filtered = nodeSet.filter(_.parentId == parentId.toInt)
+      //Ok(Json.toJson(filtered))
     }
     val filtered = nodeSet.filter(_.parentId == parentId.toInt)
     Ok(Json.toJson(filtered))

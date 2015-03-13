@@ -1,13 +1,13 @@
 package model
 
-import java.net.URL
+import java.net.{URI, URL}
 
 
 /**
  * Created by Antonio on 04/03/2015.
  */
 
-case class Resource(id : String, unit : Option[String], sampleType : String, name : Option[String] = None){
+case class Resource(id : String, unit : Option[String], sampleType : String){
   def urlId = new URL(id)
   override def equals(any: Any) : Boolean = {
     if(any.isInstanceOf[Resource])
@@ -22,10 +22,9 @@ object Resource {
 
   implicit val resourceWrites = new Writes[Resource] {
     def writes(res: Resource) = Json.obj(
-      "id" -> res.id,
+      "id" -> res.id.toString,
       "unit" -> res.unit,
-      "sampleType" -> res.sampleType,
-      "name" -> res.name
+      "sampleType" -> res.sampleType
     )
   }
 /*

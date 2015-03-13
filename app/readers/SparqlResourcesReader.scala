@@ -12,8 +12,6 @@ import org.w3.banana._
 import org.w3.banana.diesel._
 import org.w3.banana.io._
 import scala.util.Try
-
-import scala.collection.immutable.Iterable
 import scala.concurrent.duration.Duration
 
 /**
@@ -30,40 +28,34 @@ trait SparqlResourcesReader extends SparqlReaderDependencies{ self =>
 
 
   def query(): Iterable[Resource] = {
-    return Iterable[Resource]()
-    /*
-      val arashi = ArashiPrefix[Rdf]
-      val Objects = new Objects
-      import Objects._
+    //return Iterable[Resource]()
 
-      val query = parseConstruct(s"""
-                                CONSTRUCT { ?s ?p ?o }
-                                WHERE {  GRAPH $graph { ?s ?p ?o } }""").get
-      val answers: Rdf#Graph = endpoint.executeConstruct(query).getOrFail(30 seconds)
-      List(answers.toPointedGraph.as[Resource])
-      //List(answers.graph.toPG.as[Resource])
-      val it = answers.iterator map { (row: Rdf#Solution) =>
-        (
-          row("s").get.as[Rdf#URI].get,
-          row("p").get.as[Rdf#URI].get,
-          row("o").get.as[String].get
-        )
+    val arashi = ArashiPrefix[Rdf]
+    val Objects = new Objects
+    import Objects._
+    import Objects.ResourceBind._
+    val sQuery = s"""PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#>
+                     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                     PREFIX smacs: <http://ing.unibo.it/smacs/predicates#>
+                     CONSTRUCT {
+                        ?s smacs:unit ?o .
+                        ?s smacs:sampleType ?o .
+                        ?s smacs:id     ?s .
+                        ?s rdf:type smacs:Resource
+                     }
+                     WHERE{
+                        GRAPH $graph { ?s ?p ?o } .
+                        OPTIONAL { ?s smacs:unit ?o }
+                     }"""
+    val query = parseConstruct(sQuery).getOrElse(throw new Exception("cannot parse sparql query"))
+    val resultGraph = endpoint.executeConstruct(query).getOrFail(30 seconds)
+    val x: Iterable[Resource] = resultGraph.triples.collect{
+      case Triple(resource, rdf.typ, arashi.Resource) =>{
+        val pg = PointedGraph(resource, resultGraph)
+        pg.as[Resource].toOption
       }
-      lazy val resources: Map[Rdf#URI, List[(Rdf#URI, Rdf#URI, String)]] = it.toList.groupBy(_._1)
-      val rs: Iterable[Resource] = for (res <- resources) yield {
-        Resource(
-          res._1.toString,
-          res._2.find(_._2 == arashi.unit) match{
-            case Some(x :(Rdf#URI,Rdf#URI,String)) => Some(x._3)
-            case _ => None
-          },
-          res._2.find(_._2 == arashi.sampleType).get._3,
-          res._2.find(_._2 == arashi.name) match{
-            case Some(x : (Rdf#URI,Rdf#URI,String)) => Some(x._3)
-            case _ => None
-          })
-      }
-      rs
-    */
+    }.flatten
+    x
+    List(Resource("http://10.0.10.15:9875/memory/freePercentage",Some("%"),"gauge"))
   }
 }

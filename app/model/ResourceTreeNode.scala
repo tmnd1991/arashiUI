@@ -5,9 +5,9 @@ import java.net.URL
 /**
  * Created by Andrea on 05/03/15.
  */
-class ResourceTreeNode(_id : String, val children : Boolean = true){
+class ResourceTreeNode(_id : String, _unit : Option[String], val children : Boolean = true){
   val text = takeProtocolAway(_id)
-
+  def unit = _unit
   val id = text.hashCode
 
   val parentText : String = {
@@ -46,17 +46,19 @@ object ResourceTreeNode{
       "parent" -> (if (rtn.parentText == "#") "#" else rtn.parentId),
       "text" -> (if (rtn.parentText == "#") rtn.text else rtn.text.substring(rtn.parentText.length)),
       "children" -> rtn.children,
+      "unit" -> rtn.unit,
       "parentText" -> rtn.parentText
     )
   }
   def convert(r : Resource, first : Boolean) : ResourceTreeNode = {
-    new ResourceTreeNode(r.id.toString,!first)
+    new ResourceTreeNode(r.id.toString,r.unit,!first)
   }
+
   def convertFamily(resourceTreeNode: ResourceTreeNode, first : Boolean) : List[ResourceTreeNode] = {
     if (resourceTreeNode.parentId == "#".hashCode)
       List(resourceTreeNode)
     else{
-      convertFamily(new ResourceTreeNode(resourceTreeNode.parentText,true),false) :+ resourceTreeNode
+      convertFamily(new ResourceTreeNode(resourceTreeNode.parentText,None,true),false) :+ resourceTreeNode
     }
 
   }

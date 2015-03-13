@@ -4,7 +4,6 @@ import java.util.Date
 
 import model.Resource
 
-import scala.collection.immutable.Iterable
 import scala.concurrent.duration.Duration
 
 /**

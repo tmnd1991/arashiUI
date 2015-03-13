@@ -46,8 +46,8 @@ trait SparqlSamplesReader extends SparqlReaderDependencies{
         BIND( xsd:dateTime(strafter(str(?g),"http://stormsmacs/tests/")) as ?dateTime ) .
         FILTER( "$beginString"^^xsd:dateTime <= ?dateTime &&
                 "$endString"^^xsd:dateTime >= ?dateTime )
-      }"""
-      //LIMIT 100"""
+      }
+      LIMIT 1000"""
 
     val query = parseConstruct(sString).getOrElse(throw new Exception("cannot parse sparql query"))
     val resultGraph = endpoint.executeConstruct(query).getOrFail(30 seconds)

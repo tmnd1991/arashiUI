@@ -2,7 +2,18 @@
 var tree = null;
 var watched = new JsSet();
 var template = null;
+var fromPicker = null;
+var toPicker = null;
 
+function println(x) {
+    console.log(x);
+}
+function getBeginDate(){
+    return fromPicker.datetimepicker('getDate').getTime();
+}
+function getEndDate(){
+    return toPicker.datetimepicker('getDate').getTime();
+}
 function getPanelId(el) {
 	return el + "_panel";
 }
@@ -153,11 +164,13 @@ $(function() {
         function(){
             var _this = $(this)
             if (_this.hasClass("from")){
+                fromPicker = _this;
                 var d = new Date();
                 d.setTime(d.getTime()-24*60*60*1000);
                 _this.datepicker("setDate", d);
             }
             else{
+                toPicker = _this;
                 _this.datepicker("setTime", new Date());
             }
         }
@@ -166,7 +179,18 @@ $(function() {
 /**
 *** Gets data from the resourceId
 **/
-function dataOfMeter(el){
+function dataOfMeter(el, start, end, callback){
+    var n = tree.jstree(true).get_node(el);
+    var id = "http://" + n.original.parentText + n.original.text;
+    $.get( "samples/", { id : id, start : start, end : end } )
+        .success(function( data ) {
+            var v = [];
+            for(i=0;i<data.length;i++){
+                v.push([i,parseFloat(data[i].value)])
+            }
+            callback(v);
+    });
+    /*
 	//this is sample data
 	var d1 = [];
 	for (var i = 0; i < 14; i += 0.5) {
@@ -189,6 +213,7 @@ function dataOfMeter(el){
 		[12, 2.5]
 	];
 	return [d1,d2,d3];
+	*/
 }
 
 /**
@@ -199,13 +224,17 @@ function newPanelForResource(el) {
 	var r = Math.floor((Math.random() * 2)); //between 0 and 1
 	var panelId = getPanelId(el);
 	var toRet = null;
-	if (r === 0){
-		var graphData = dataOfMeter(el);
-		toRet = template_graph.clone().attr('id', panelId);
-		$.plot(toRet.find(".placeholder"), graphData);
+	if (n.original.unit !== null){
+        toRet = template_graph.clone().attr('id', panelId);
+        toRet.addClass("dataPanelGraph");
+        updateGraphPanel(toRet);
+		/*dataOfMeter(el , getBeginDate(), getEndDate(), function(d){
+            $.plot(toRet.find(".placeholder"), [d]);
+        });*/
 	}
 	else{
 		toRet = template_singleValue.clone().attr('id', panelId);
+        toRet.addClass("dataPanelText");
 		toRet.find(".label").text("template text");
 	}
 	toRet.find(".titleSpan").html(n.original.parentText + n.original.text);
@@ -215,5 +244,21 @@ function newPanelForResource(el) {
 *** updates all the panels
 **/
 function updatePanels(){
-    console.log("updates");
+    $(".dataPanelGraph").each(function(){
+       updateGraphPanel($(this));
+    });
+    $(".dataPanelText").each(function(){
+        updateTextPanel($(this));
+    });
+}
+
+function updateGraphPanel(p){
+    var id = p.attr("id").split("_")[0];
+    dataOfMeter(id , getBeginDate(), getEndDate(), function(d){
+        $.plot(p.find(".placeholder"), [d]);
+    });
+}
+
+function updateTextPanel(p){
+    var id = p.id.split("_")[0];
 }
