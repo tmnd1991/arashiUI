@@ -1,6 +1,7 @@
 package readers
 
 import java.net.URL
+import java.util.Date
 import scala.concurrent.duration._
 
 import it.unibo.ing.utils._
@@ -29,7 +30,7 @@ trait SparqlResourcesReader extends SparqlReaderDependencies{ self =>
 
   def query(): Iterable[Resource] = {
     //return Iterable[Resource]()
-
+    val start = new Date();
     val arashi = ArashiPrefix[Rdf]
     val Objects = new Objects
     import Objects._
@@ -50,12 +51,15 @@ trait SparqlResourcesReader extends SparqlReaderDependencies{ self =>
                      }"""
     val query = parseConstruct(sQuery).getOrElse(throw new Exception("cannot parse sparql query"))
     val resultGraph = endpoint.executeConstruct(query).getOrFail(30 seconds)
-    resultGraph.triples.collect{
+    val res = resultGraph.triples.collect{
       case Triple(resource, rdf.typ, arashi.Resource) =>{
         val pg = PointedGraph(resource, resultGraph)
         pg.as[Resource].toOption
       }
     }.flatten
+    val end = new Date()
+    println("lettura resources in" + (end.getTime - start.getTime) + " ms")
+    return res
     //List(Resource("http://10.0.10.15:9875/memory/freePercentage",Some("%"),"gauge"))
   }
 }

@@ -24,6 +24,7 @@ trait SparqlSamplesReader extends SparqlReaderDependencies{
   val endpoint : URL
 
   def query(resource : URL, begin : Date, end : Date) : List[Sample] = {
+    val startExec = new Date()
     val arashi = ArashiPrefix[Rdf]
     val Objects = new Objects
     import Objects._
@@ -55,7 +56,10 @@ trait SparqlSamplesReader extends SparqlReaderDependencies{
         val pg = PointedGraph(sample, resultGraph)
         pg.as[Sample].toOption
     }.flatten
-    samples.toList.sortBy(_.date)
+    val res = samples.toList.sortBy(_.date)
+    val endExec = new Date()
+    println("lettura samples in" + (endExec.getTime - startExec.getTime) + " ms")
+    return res
   }
 
   implicit class RichDateTime(x : DateTime) extends Ordered[DateTime]{
