@@ -12,7 +12,7 @@ import play.api.libs.json.Json
  * Created by tmnd91 on 12/03/15.
  */
 object Samples extends Controller{
-  val reader = new SparqlSampleJenaReader(new URL("http://137.204.57.150:3030/ds/query"))
+  val reader = new SparqlSampleJenaReader(Constants.SparqlEndpointURL)
 
   def samplesOf(id : String, from : Long, to : Long) = Action{
     val samples = reader.query(new URL(id),new Date(from),new Date(to))

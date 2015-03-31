@@ -264,4 +264,10 @@ function updateGraphPanel(p){
 
 function updateTextPanel(p){
     var id = p.id.split("_")[0];
+    dataOfMeter(id , getBeginDate(), getEndDate(), function(d){
+        if (d.length != 0)
+            p.find(".placeholder").html(d[0]);
+        else
+            p.find(".placeholder").html("No samples");
+    });
 }
