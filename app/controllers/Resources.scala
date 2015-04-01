@@ -17,9 +17,10 @@ import scala.collection._
  */
 object Resources extends Controller{
 
-  lazy val reader = new SparqlResourceJenaReader(new URL(Constants.SparqlEndpointURL, "<http://stormsmacs/tests/Resources>")
+  lazy val reader = new SparqlResourceJenaReader(Constants.SparqlEndpointURL, "<http://stormsmacs/tests/Resources>")
   private var lastResult : Iterable[Resource] = null
   private var nodeSet : Set[ResourceTreeNode] = null
+
   def childrenOf(parentId : String) = Action{
     if(lastResult != reader.result){
       lastResult = reader.result

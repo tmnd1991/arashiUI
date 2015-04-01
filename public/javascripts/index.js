@@ -186,7 +186,7 @@ function dataOfMeter(el, start, end, callback){
         .success(function( data ) {
             var v = [];
             for(i=0;i<data.length;i++){
-                v.push([i,parseFloat(data[i].value)])
+                v.push([data[i].date,parseFloat(data[i].value)])
             }
             callback(v);
     });
@@ -255,8 +255,39 @@ function updatePanels(){
 function updateGraphPanel(p){
     var id = p.attr("id").split("_")[0];
     dataOfMeter(id , getBeginDate(), getEndDate(), function(d){
-        if (d.length != 0)
-            $.plot(p.find(".placeholder"), [d]);
+        if (d.length != 0){
+            $.plot(p.find(".placeholder"), [d],{ xaxis: {
+                show : false
+
+            //mode: null or "time" ("time" requires jquery.flot.time.js plugin)
+            //timezone: null, "browser" or timezone (only makes sense for mode: "time")
+
+            //color: null or color spec
+            //tickColor: null or color spec
+            //font: null or font spec object
+
+            //min: null or number
+            //max: null or number
+            //autoscaleMargin: null or number
+
+            //transform: null or fn: number -> number
+            //inverseTransform: null or fn: number -> number
+
+
+            //tickSize: 3
+            //minTickSize: number or array
+            //tickFormatter: (fn: number, object -> string) or string
+            //tickDecimals: null or number
+
+            //labelWidth: null or number
+            //labelHeight: null or number
+            //reserveSpace: null or true
+
+            //tickLength: null or number
+
+            //alignTicksWithAxis: null or number
+        }});
+}
         else
             p.find(".placeholder").html("No samples");
     });

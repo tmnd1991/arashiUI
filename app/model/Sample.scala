@@ -14,7 +14,7 @@ object Sample {
 
   implicit val resourceWrites = new Writes[Sample] {
     def writes(sample: Sample) = Json.obj(
-      "date" -> sample.date,
+      "date" -> sample.date.getMillis(),
       "value" -> sample.value
     )
   }
